@@ -16,8 +16,8 @@ const getAllFoods = async (req, res) => {
 const getSingleFood = async (req, res) => {
   const {id} = req.params;
   try {
-    const food = data.food.find(item => item._id === id); // Search for the food item by ID
-    // const food = await GridFood.findOne({_id: id});
+     //const food = data.food.find(item => item._id === id); // Search for the food item by ID
+    const food = await GridFood.findOne({_id: id});
 
     res.status(200).json({food});
   } catch (err) {
