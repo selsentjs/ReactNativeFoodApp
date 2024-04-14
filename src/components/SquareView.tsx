@@ -1,10 +1,11 @@
 import {
   FlatList,
+  KeyboardAvoidingView,
   Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
+  TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -21,15 +22,15 @@ interface GridImageData {
   price: string;
   category: string;
 }
-interface GridViewProps {
+interface SquareViewProps {
   search: string;
   selectedCategory: string;
 }
 
-const GridImage: React.FC<GridViewProps> = ({
+const SquareView: React.FC<SquareViewProps> = ({
+  search,
   selectedCategory,
   setSelectedCategory,
-  search,
 }) => {
   const dispatch = useDispatch();
   const GridFood = useSelector(state => state.GridFood.data);
@@ -53,7 +54,7 @@ const GridImage: React.FC<GridViewProps> = ({
   };
 
   useEffect(() => {
-    fetchData(); // Pass selectedCategory to fetchData function
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -64,7 +65,7 @@ const GridImage: React.FC<GridViewProps> = ({
     setFilteredGridImage(filteredData);
   }, [selectedCategory, GridFood]);
 
-  // Search functionality
+  // search
   useEffect(() => {
     if (search) {
       const filteredData = GridFood.filter(item =>
@@ -72,7 +73,6 @@ const GridImage: React.FC<GridViewProps> = ({
       );
       setFilteredGridImage(filteredData);
     } else {
-      // If the search text is empty, reset the filtered data to the original GridFood array
       setFilteredGridImage(GridFood);
     }
   }, [search, GridFood]);
@@ -85,43 +85,48 @@ const GridImage: React.FC<GridViewProps> = ({
     );
   }
   // handle image by id
-  const handleImagePress = async item => {
+  const handleImagePress = async (item: GridImageData) => {
     navigation.navigate('RecipeDetail', {item});
   };
 
   return (
-    <View style={styles.backgroundView}>
-      {filteredGridImage.length > 0 ? (
-        <FlatList
-          data={filteredGridImage}
-          renderItem={({item, index}) => (
-            <View style={styles.imageContainer} key={index}>
-              <View>
-                <TouchableOpacity onPress={() => handleImagePress({...item})}>
-                  <Image source={{uri: item.image}} style={styles.image} />
-                  <Text style={styles.text}>
-                    {item.title.length > 15
-                      ? item.title.substring(0, 15) + '...'
-                      : item.title}
-                  </Text>
-                  <Text style={styles.priceText}> ₹ {item.price}</Text>
-                </TouchableOpacity>
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <View style={styles.backgroundView}>
+        {filteredGridImage.length > 0 ? (
+          <FlatList
+            data={filteredGridImage}
+            renderItem={({item, index}) => (
+              <View style={styles.imageContainer} key={index}>
+                <View>
+                  {/* // pass the data from here to RecipeDetail */}
+
+                  <TouchableOpacity onPress={() => handleImagePress({...item})}>
+                    <Image source={{uri: item.image}} style={styles.image} />
+                    <Text style={styles.text}>
+                      {item.title.length > 30
+                        ? item.title.substring(0, 30) + '...'
+                        : item.title}
+                    </Text>
+                    <Text style={styles.priceText}> ₹ {item.price}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          numColumns={2} // Set number of columns to 2
-        />
-      ) : (
-        <Text style={styles.noData}>No food available</Text>
-      )}
-    </View>
+            )}
+          />
+        ) : (
+          <Text style={styles.noData}>No Food Available</Text>
+        )}
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
-export default GridImage;
+export default SquareView;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -131,37 +136,37 @@ const styles = StyleSheet.create({
     backgroundColor: '#eae8e8',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    paddingTop: 10,
-    paddingHorizontal: 5,
     flex: 1,
   },
   imageContainer: {
-    flex: 1,
-    margin: 5,
+    marginVertical: 10,
     backgroundColor: '#ffffff',
-    borderRadius: 10,
+    width: 346,
+    height: 307,
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 5,
+    alignSelf: 'center',
+    //marginBottom: 20,
   },
   image: {
-    width: '100%',
-    aspectRatio: 1,
+    marginVertical: 10,
+    width: 328,
+    height: 200,
     borderRadius: 10,
   },
   text: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '600',
     color: 'black',
-    marginTop: 5,
-    textAlign: 'center',
+    justifyContent: 'flex-start',
+    marginLeft: 10,
   },
   priceText: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '600',
     color: 'black',
-    marginTop: 5,
-    textAlign: 'center',
+    justifyContent: 'flex-start',
+    marginLeft: 10,
+    marginTop: 10,
   },
   noData: {
     color: 'red',

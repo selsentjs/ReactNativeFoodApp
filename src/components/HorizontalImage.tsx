@@ -14,7 +14,7 @@ import {setHorizontalFood} from '../redux/slice/HorizontalFoodSlice';
 const url =
   'https://selsentjs.github.io/ReactNativeFoodApp/horizontalImage.json';
 
-const HorizontalImage = () => {
+const HorizontalImage = ({selectedCategory, setSelectedCategory}) => {
   const dispatch = useDispatch();
   const HorizontalFood = useSelector(state => state.HorizontalFood.data);
   //console.log('horizontalFood:', HorizontalFood);
@@ -31,9 +31,9 @@ const HorizontalImage = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
+    fetchData(); // Pass selectedCategory to fetchData function
+  }, [selectedCategory]);
+  
   return (
     <View>
       <ScrollView
@@ -45,7 +45,7 @@ const HorizontalImage = () => {
           (item: {image: string; category: string}, index: number) => (
             <View key={index} style={styles.itemContainer}>
               {/* Display the item regardless of the category */}
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => setSelectedCategory(item.category)}>
                 <Image
                   source={{uri: item.image}}
                   style={styles.image}

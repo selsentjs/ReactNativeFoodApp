@@ -1,5 +1,5 @@
 const GridFood = require('../models/GridFood');
-const data = require('./gridImage.json');
+//const data = require('./gridImage.json');
 
 // get all the foods
 const getAllFoods = async (req, res) => {

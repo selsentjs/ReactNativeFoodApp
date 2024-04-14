@@ -1,10 +1,40 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HorizontalImage from '../components/HorizontalImage';
-
+import GridImage from '../components/GridImage';
+import Search from '../components/Search';
+import RecommendedRecipes from '../components/RecommendedRecipes';
+import EllipsisView from '../components/EllipsisView';
+import SquareView from '../components/SquareView';
 
 const HomePage = () => {
+  const [search, setSearch] = useState('');
+  // Add a new state to keep track of the selected category
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  // when i press grid icon it should work
+  const [showGridView, setShowGridView] = useState(true);
+  const [showSquareView, setShowSquareView] = useState(false);
+  const [showEllipsisView, setShowEllipsisView] = useState(false);
+
+  const toggleGridView = () => {
+    setShowGridView(true);
+    setShowSquareView(false); // Hide square view
+    setShowEllipsisView(false);
+  };
+
+  const toggleSquareView = () => {
+    setShowSquareView(true);
+    setShowGridView(false); // Hide grid view
+    setShowEllipsisView(false);
+  };
+
+  const toggleEllipsisView = () => {
+    setShowEllipsisView(true);
+    setShowGridView(false); // Hide grid view
+    setShowSquareView(false); // Hide square view
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.heading}>
@@ -22,7 +52,41 @@ const HomePage = () => {
           style={styles.userIcon}
         />
       </View>
-      <HorizontalImage />
+      <HorizontalImage
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
+      <Search
+        value={search}
+        onChangeText={setSearch}
+        placeholder="Search Food"
+      />
+      <RecommendedRecipes
+        toggleGridView={toggleGridView}
+        toggleSquareView={toggleSquareView}
+        toggleEllipsisView={toggleEllipsisView}
+      />
+      {showGridView && (
+        <GridImage
+          search={search}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        />
+      )}
+      {showEllipsisView && (
+        <EllipsisView
+          search={search}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        />
+      )}
+      {showSquareView && (
+        <SquareView
+          search={search}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        />
+      )}
     </View>
   );
 };
