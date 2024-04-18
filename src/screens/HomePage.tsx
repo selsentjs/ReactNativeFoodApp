@@ -3,10 +3,11 @@ import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HorizontalImage from '../components/HorizontalImage';
 import GridImage from '../components/GridImage';
-import Search from '../components/Search';
+import Search from '../components/common/Search';
 import RecommendedRecipes from '../components/RecommendedRecipes';
 import EllipsisView from '../components/EllipsisView';
 import SquareView from '../components/SquareView';
+
 
 const HomePage = () => {
   const [search, setSearch] = useState('');
@@ -17,18 +18,21 @@ const HomePage = () => {
   const [showSquareView, setShowSquareView] = useState(false);
   const [showEllipsisView, setShowEllipsisView] = useState(false);
 
+  // Function to toggle grid view
   const toggleGridView = () => {
     setShowGridView(true);
     setShowSquareView(false); // Hide square view
     setShowEllipsisView(false);
   };
 
+  // Function to toggle square view
   const toggleSquareView = () => {
     setShowSquareView(true);
     setShowGridView(false); // Hide grid view
     setShowEllipsisView(false);
   };
 
+  // Function to toggle ellipsis view
   const toggleEllipsisView = () => {
     setShowEllipsisView(true);
     setShowGridView(false); // Hide grid view
@@ -66,26 +70,15 @@ const HomePage = () => {
         toggleSquareView={toggleSquareView}
         toggleEllipsisView={toggleEllipsisView}
       />
+
       {showGridView && (
-        <GridImage
-          search={search}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        />
+        <GridImage search={search} selectedCategory={selectedCategory} />
       )}
       {showEllipsisView && (
-        <EllipsisView
-          search={search}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        />
+        <EllipsisView search={search} selectedCategory={selectedCategory} />
       )}
       {showSquareView && (
-        <SquareView
-          search={search}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-        />
+        <SquareView search={search} selectedCategory={selectedCategory} />
       )}
     </View>
   );

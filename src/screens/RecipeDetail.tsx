@@ -6,27 +6,50 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import React, {useState} from 'react';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Octicons from 'react-native-vector-icons/Octicons';
-import axios from 'axios';
 
-const RecipeDetail = ({navigation, route}) => {
+import Header from '../components/common/Header';
+import Button from '../components/common/Button';
+import {useDispatch} from 'react-redux';
+import {addFavoriteFood} from '../redux/slice/FavoriteFoodSlice';
+import {addItemToCart} from '../redux/slice/CartSlice';
+
+interface recipeProps {
+  navigation: any;
+  route: any;
+}
+interface Item {
+  [key: string]: string;
+}
+
+const RecipeDetail = ({navigation, route}: recipeProps) => {
+  const dispatch = useDispatch();
+
   // console.log('Route:', route);
   const {item} = route.params;
 
   const [isFavorite, setIsFavorite] = useState(false);
+  const [qty, setQty] = useState(1);
 
-  const handleFavorite = () => {
-    setIsFavorite(true);
+  const increaseQuantity = () => {
+    setQty(qty + 1);
   };
 
-  const handleBackPress = () => {
-    navigation.goBack();
+  const decreaseQuantity = () => {
+    if (qty > 1) {
+      setQty(qty - 1);
+    }
   };
 
-  const ingredientsIndexes = meal => {
+  const handleAddToFavorite = async () => {
+    dispatch(addFavoriteFood(item));
+    setIsFavorite(!isFavorite);
+  };
+
+  const ingredientsIndexes = (meal: Item) => {
     if (!meal) return [];
     let indexes = [];
     for (let i = 1; i <= 15; i++) {
@@ -38,7 +61,7 @@ const RecipeDetail = ({navigation, route}) => {
   };
 
   // display allergen
-  const allergenIndexes = meal => {
+  const allergenIndexes = (meal: Item) => {
     if (!meal) return [];
     let indexes = [];
     for (let i = 1; i <= 15; i++) {
@@ -52,29 +75,33 @@ const RecipeDetail = ({navigation, route}) => {
   return (
     <View>
       <ScrollView>
+        <Header
+          leftIcon={require('../assets/back-arrow.png')}
+          rightIcon={require('../assets/shopping-bag.png')}
+          title={'Recipe Details'}
+          onClickLeftIcon={() => {
+            navigation.goBack();
+          }}
+          onClickRightIcon={() => {
+            navigation.navigate('CartPage');
+          }}
+          isCart={true} // Pass the isCart prop
+        />
         <Image source={{uri: item.image}} style={styles.banner} />
         <Text style={styles.title}>{item.title}</Text>
-        <View style={styles.addRemoveButtonContainer}>
-          <Text style={styles.priceText}>Price: ₹ {item.price}</Text>
-          <TouchableOpacity style={styles.removeButton}>
-            <Ionicons name={'remove'} size={40} color={'white'} />
-          </TouchableOpacity>
-          <Text style={styles.numberText}>1</Text>
-          <TouchableOpacity style={styles.addButton}>
-            <Ionicons name={'add'} size={40} color={'white'} />
-          </TouchableOpacity>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={[styles.price, {color: '#000'}]}>{'Price:'}</Text>
+          <Text style={styles.price}> ₹ {item.price}</Text>
+          <View style={styles.qtyView}>
+            <TouchableOpacity style={styles.button} onPress={decreaseQuantity}>
+              <Text style={{fontSize: 20, fontWeight: '600'}}>-</Text>
+            </TouchableOpacity>
+            <Text style={styles.qty}>{qty}</Text>
+            <TouchableOpacity style={styles.button} onPress={increaseQuantity}>
+              <Text style={{fontSize: 20, fontWeight: '600'}}>+</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <TouchableOpacity style={styles.leftArrow} onPress={handleBackPress}>
-          <MaterialIcons name={'keyboard-arrow-left'} size={40} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.favoriteIcon}>
-          <Ionicons
-            name={'heart'}
-            size={40}
-            color={isFavorite ? 'red' : 'gray'}
-            onPress={handleFavorite}
-          />
-        </TouchableOpacity>
 
         {/* nutrition part */}
 
@@ -180,10 +207,27 @@ const RecipeDetail = ({navigation, route}) => {
           </View>
         </View>
 
-        {/* button */}
-        <TouchableOpacity style={styles.btn}>
-          <Text style={styles.btnText}>Add To Cart</Text>
+        {/* Favorite Button */}
+        <TouchableOpacity style={styles.favoriteIcon}>
+          <Ionicons
+            name={'heart'}
+            size={40}
+            color={isFavorite ? 'red' : 'gray'}
+            // while pressing favorite icon, that favorite food should add to FavoritePage
+            onPress={handleAddToFavorite}
+          />
         </TouchableOpacity>
+
+        {/* Add To Cart button */}
+        <Button
+          bg={'#734F0A'}
+          title={'Add To Cart'}
+          color={'#fff'}
+          onClick={() => {
+            dispatch(addItemToCart({...item, qty}));
+            navigation.navigate('CartPage');
+          }}
+        />
       </ScrollView>
     </View>
   );
@@ -211,39 +255,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: '#0A734D',
     fontWeight: '600',
-  },
-  leftArrow: {
-    top: 20,
-    left: 20,
-    position: 'absolute',
-    backgroundColor: '#eeeeef',
-    borderRadius: 100,
-    padding: 2,
-  },
-  favoriteIcon: {
-    top: 20,
-    right: 20,
-    position: 'absolute',
-    backgroundColor: '#eeeeef',
-    borderRadius: 100,
-    padding: 2,
-  },
-  addRemoveButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginHorizontal: 2,
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  numberText: {
-    fontSize: 30,
-    color: 'black',
-  },
-  removeButton: {
-    backgroundColor: '#0c0c0c',
-  },
-  addButton: {
-    backgroundColor: '#0c0c0c',
   },
 
   nutritionContainer: {
@@ -285,20 +296,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginVertical: 5,
   },
-  btn: {
-    backgroundColor: '#734F0A',
-    width: 275,
-    height: 66,
-    borderRadius: 10,
-    marginTop: 30,
-    marginBottom: 30,
+  qtyView: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
+    marginTop: 10,
+    marginLeft: 20,
   },
-  btnText: {
-    color: 'white',
+  button: {
+    padding: 10,
+    borderWidth: 1,
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginLeft: 20,
+  },
+  qty: {
+    marginLeft: 15,
     fontSize: 20,
+  },
+  price: {
+    fontSize: 23,
+    color: 'green',
     fontWeight: '600',
+    marginLeft: 20,
+    marginTop: 20,
   },
 });

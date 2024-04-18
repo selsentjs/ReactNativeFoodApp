@@ -3,13 +3,14 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomePage from '../screens/HomePage';
 import FavoritePage from '../screens/FavoritePage';
 import OrderPage from '../screens/OrderPage';
 import CartPage from '../screens/CartPage';
 import RecipeDetail from '../screens/RecipeDetail';
+import User from '../screens/User';
+import Checkout from '../screens/Checkout';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -98,6 +99,13 @@ const StackNavigate = () => {
       <Stack.Screen
         name="RecipeDetail"
         component={RecipeDetail}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Checkout"
+        component={Checkout}
         options={{
           headerShown: false,
         }}
