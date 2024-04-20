@@ -1,21 +1,31 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomePage from '../screens/HomePage';
 import FavoritePage from '../screens/FavoritePage';
 import OrderPage from '../screens/OrderPage';
 import CartPage from '../screens/CartPage';
 import RecipeDetail from '../screens/RecipeDetail';
-import User from '../screens/User';
 import Checkout from '../screens/Checkout';
+import {useSelector} from 'react-redux';
+import Addresses from '../screens/Addresses';
+import AddAddress from '../screens/AddAddress';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const BottomTabNavigation = () => {
+  const cart = useSelector(state => state.cart.data);
+  const [cartLength, setCartLength] = useState(0);
+  // console.log('cart:', cart.length);
+
+  useEffect(() => {
+    // Show the badge only if cartLength is greater than 0
+    setCartLength(cart.length);
+  }, [cart]);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -28,7 +38,7 @@ const BottomTabNavigation = () => {
         component={HomePage}
         options={{
           headerShown: false,
-          tabBarIcon: ({size, color, focused}) => (
+          tabBarIcon: ({color, focused}) => (
             <Ionicons
               name={focused ? 'home' : 'home-outline'}
               size={28}
@@ -43,7 +53,7 @@ const BottomTabNavigation = () => {
         component={FavoritePage}
         options={{
           headerShown: false,
-          tabBarIcon: ({size, color, focused}) => (
+          tabBarIcon: ({color, focused}) => (
             <Ionicons
               name={focused ? 'heart' : 'heart-outline'}
               size={28}
@@ -58,7 +68,7 @@ const BottomTabNavigation = () => {
         component={OrderPage}
         options={{
           headerShown: false,
-          tabBarIcon: ({size, color, focused}) => (
+          tabBarIcon: ({color, focused}) => (
             <Ionicons
               name={focused ? 'reader' : 'reader-outline'}
               size={28}
@@ -80,6 +90,8 @@ const BottomTabNavigation = () => {
               color={color}
             />
           ),
+          // Render the CartBadge component directly
+          tabBarBadge: cartLength > 0 ? cartLength : undefined,
         }}
       />
     </Tab.Navigator>
@@ -106,6 +118,20 @@ const StackNavigate = () => {
       <Stack.Screen
         name="Checkout"
         component={Checkout}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Addresses"
+        component={Addresses}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="AddAddress"
+        component={AddAddress}
         options={{
           headerShown: false,
         }}

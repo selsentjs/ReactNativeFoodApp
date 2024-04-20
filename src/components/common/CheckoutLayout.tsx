@@ -8,22 +8,24 @@ import {
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
-const CheckoutLayout = ({total, items}) => {
+interface checkoutProps {
+  total: number;
+  items: number;
+}
+const CheckoutLayout = ({total, items}: checkoutProps) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.checkoutContainer}>
       <View style={styles.tab}>
-        <Text style={{color: 'black', fontSize: 20}}>{`(items ${items})`}</Text>
-        <Text style={{color: 'red', fontSize: 20}}>
-          {'Total :  ₹ ' + total}
-        </Text>
+        <Text style={styles.items}>{`(Total Items: ${items})`}</Text>
+        <Text style={styles.total}>{'Grand Total :  ₹ ' + total}</Text>
       </View>
       <View style={styles.tab}>
         <TouchableOpacity
           style={styles.checkoutBtn}
-          onPress={() => navigation.navigate('Checkout')}>
-          <Text style={{color: 'white', fontSize: 20}}>Checkout</Text>
+          onPress={() => navigation.navigate('Checkout' as never)}>
+          <Text style={styles.checkoutText}>Checkout</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: 70,
     width: Dimensions.get('window').width,
-    backgroundColor: '#e6e6fa',
+    backgroundColor: '#d1d1ff',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -55,5 +57,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  items: {
+    color: 'black',
+    fontSize: 20,
+  },
+  total: {color: 'red', fontSize: 20},
+  checkoutText: {
+    color: 'white',
+    fontSize: 20,
   },
 });

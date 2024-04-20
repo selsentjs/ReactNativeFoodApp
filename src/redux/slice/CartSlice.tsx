@@ -1,7 +1,15 @@
 const {createSlice} = require('@reduxjs/toolkit');
 
+interface CartItem {
+  id: number;
+  title: string;
+  image: string;
+  price: number;
+  qty: number;
+}
+
 const initialState = {
-  data: [],
+  data: [] as CartItem[],
   isLoading: false,
 };
 

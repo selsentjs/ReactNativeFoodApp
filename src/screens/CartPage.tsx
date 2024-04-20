@@ -18,19 +18,29 @@ import {
 } from '../redux/slice/CartSlice';
 import CheckoutLayout from '../components/common/CheckoutLayout';
 
+interface CartItem {
+  id: number;
+  title: string;
+  image: string;
+  price: number;
+  qty: number;
+}
+
 const CartPage = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const cart = useSelector(state => state.cart.data);
+  const cart: CartItem[] = useSelector(
+    (state: {cart: {data: CartItem[]}}) => state.cart.data,
+  );
   //console.log('cart:', cart);
   // handle image by id
-  const handleImagePress = async item => {
+  const handleImagePress = async (item: any) => {
     navigation.navigate('RecipeDetail', {item});
   };
 
   // get total for single item
-  const getTotalForSingleItem = item => {
+  const getTotalForSingleItem = (item: any) => {
     return item.price * item.qty;
   };
 
@@ -44,77 +54,59 @@ const CartPage = () => {
       <Header
         title={'Cart Items'}
         leftIcon={require('../assets/back-arrow.png')}
+        rightIcon={require('../assets/shopping-bag.png')}
         onClickLeftIcon={() => {
           navigation.goBack();
         }}
       />
       <View style={{flex: 1}}>
-        <ScrollView>
-          <FlatList
-            data={cart}
-            renderItem={({item}) => {
-              return (
-                <View style={styles.imageContainer} key={item.id}>
-                  <TouchableOpacity
-                    onPress={() => handleImagePress({...item})}
-                    style={styles.touchableContainer}>
-                    {item.image && ( // Check if item.image is not null or undefined
-                      <Image source={{uri: item.image}} style={styles.image} />
-                    )}
-                    <View style={styles.textContainer}>
-                      <Text style={styles.text}>
-                        {item.title.length > 15
-                          ? item.title.substring(0, 15) + '...'
-                          : item.title}
-                      </Text>
-                      <View style={styles.qtyView}>
-                        <Text style={styles.priceText}> ₹ {item.price}</Text>
-                        {/* // increase and decrease the quantity by cartSlice */}
-                        <TouchableOpacity
-                          style={styles.btn}
-                          onPress={() => {
-                            if (item.qty > 1) {
-                              dispatch(reduceItemFromCart(item)); // If quantity is more than 1, reduce it
-                            } else {
-                              dispatch(removeItemFromCart(item)); // If quantity is 1, remove it from the cart
-                            }
-                          }}>
-                          <Text style={{fontSize: 20, fontWeight: '600'}}>
-                            -
-                          </Text>
-                        </TouchableOpacity>
-                        <Text
-                          style={{
-                            fontSize: 20,
-                            fontWeight: '600',
-                            marginLeft: 13,
-                          }}>
-                          {item.qty}
-                        </Text>
-                        <TouchableOpacity
-                          style={styles.btn}
-                          onPress={() => dispatch(addItemToCart(item))}>
-                          <Text style={{fontSize: 20, fontWeight: '600'}}>
-                            +
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                      <Text
-                        style={{
-                          fontSize: 20,
-                          fontWeight: '600',
-                          marginTop: 15,
-                          color: 'green',
+        <FlatList
+          data={cart}
+          renderItem={({item}) => {
+            return (
+              <View style={styles.imageContainer} key={item.id}>
+                <TouchableOpacity
+                  onPress={() => handleImagePress({...item})}
+                  style={styles.touchableContainer}>
+                  {item.image && ( // Check if item.image is not null or undefined
+                    <Image source={{uri: item.image}} style={styles.image} />
+                  )}
+                  <View style={styles.textContainer}>
+                    <Text style={styles.text}>
+                      {item.title.length > 15
+                        ? item.title.substring(0, 15) + '...'
+                        : item.title}
+                    </Text>
+                    <View style={styles.qtyView}>
+                      <Text style={styles.priceText}> ₹ {item.price}</Text>
+                      {/* // increase and decrease the quantity by cartSlice */}
+                      <TouchableOpacity
+                        style={styles.btn}
+                        onPress={() => {
+                          if (item.qty > 1) {
+                            dispatch(reduceItemFromCart(item)); // If quantity is more than 1, reduce it
+                          } else {
+                            dispatch(removeItemFromCart(item)); // If quantity is 1, remove it from the cart
+                          }
                         }}>
-                        Total : ₹ {getTotalForSingleItem(item)}
-                      </Text>
+                        <Text style={styles.operator}>-</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.qtyText}>{item.qty}</Text>
+                      <TouchableOpacity
+                        style={styles.btn}
+                        onPress={() => dispatch(addItemToCart(item))}>
+                        <Text style={styles.operator}>+</Text>
+                      </TouchableOpacity>
                     </View>
-                  </TouchableOpacity>
-                </View>
-              );
-            }}
-          />
-        </ScrollView>
+                    <Text style={styles.singleItemTotal}>
+                      Total : ₹ {getTotalForSingleItem(item)}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        />
       </View>
       {/* checkout details */}
       {cart.length > 0 && (
@@ -123,7 +115,7 @@ const CartPage = () => {
 
       {cart.length === 0 && (
         <View style={styles.noItems}>
-          <Text>No Items in cart</Text>
+          <Text style={{color: 'green', fontSize: 22}}>No Items in cart</Text>
         </View>
       )}
     </View>
@@ -196,5 +188,20 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  singleItemTotal: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginTop: 15,
+    color: 'green',
+  },
+  qtyText: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginLeft: 13,
+  },
+  operator: {
+    fontSize: 20,
+    fontWeight: '600',
   },
 });

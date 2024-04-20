@@ -8,13 +8,14 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Header from '../components/common/Header';
 import {useNavigation} from '@react-navigation/native';
+import {addItemToCart} from '../redux/slice/CartSlice';
 
 const FavoritePage = () => {
   const navigation = useNavigation();
-
+  const dispatch = useDispatch();
   const FavoriteFood = useSelector(state => state.FavoriteFood.data);
 
   //console.log('FavoriteFood:', FavoriteFood);
@@ -29,6 +30,7 @@ const FavoritePage = () => {
         <Header
           title={'My Favorite Food'}
           leftIcon={require('../assets/back-arrow.png')}
+          rightIcon={require('../assets/shopping-bag.png')}
           onClickLeftIcon={() => {
             navigation.goBack();
           }}
@@ -51,6 +53,16 @@ const FavoritePage = () => {
                         : item.title}
                     </Text>
                     <Text style={styles.priceText}> ₹ {item.price}</Text>
+
+                    {/* // This Add To Cart button used to add item to the cart from favorite food page */}
+                    <TouchableOpacity
+                      onPress={() => {
+                        dispatch(addItemToCart({...item}));
+                        navigation.navigate('CartPage' as never);
+                      }}
+                      style={styles.btn}>
+                      <Text style={{color: '#fff'}}>Add To Cart</Text>
+                    </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -110,5 +122,14 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     marginVertical: 40,
+  },
+  btn: {
+    backgroundColor: '#734F0A',
+    width: 100,
+    height: 40,
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
   },
 });

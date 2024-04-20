@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {Dimensions, StyleSheet} from 'react-native';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 interface HeaderProps {
   title: string;
@@ -24,13 +24,11 @@ const Header = ({
   onClickRightIcon,
   isCart,
 }: HeaderProps) => {
-
   // when we press the 'Add To Cart' button,
   // number should display in the cart (like how many items added that number)
 
   const cart = useSelector(state => state.cart.data);
-  console.log('cart:', cart)
- 
+
   const navigation = useNavigation();
 
   return (
@@ -43,29 +41,19 @@ const Header = ({
       {isCart && (
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => navigation.navigate('CartPage')}>
+          onPress={() => navigation.navigate('CartPage' as never)}>
           <Image
             source={rightIcon}
             style={[styles.icon, {width: 40, height: 40}]}
           />
           {/* To display number of how many items added */}
-          <View
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 10,
-              backgroundColor: '#fff',
-              position: 'absolute',
-              right: 0,
-              top: 0,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{color: 'black', fontSize: 15}}>{cart.length}</Text>
-          </View>
+          {cart.length > 0 && (
+            <View style={styles.cartLengthTextContainer}>
+              <Text style={styles.cartLengthText}>{cart.length}</Text>
+            </View>
+          )}
         </TouchableOpacity>
       )}
-    
     </View>
   );
 };
@@ -97,5 +85,20 @@ const styles = StyleSheet.create({
   title: {
     color: '#fff',
     fontSize: 20,
+  },
+  cartLengthTextContainer: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cartLengthText: {
+    color: 'black',
+    fontSize: 15,
   },
 });

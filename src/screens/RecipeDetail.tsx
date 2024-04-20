@@ -47,6 +47,7 @@ const RecipeDetail = ({navigation, route}: recipeProps) => {
   const handleAddToFavorite = async () => {
     dispatch(addFavoriteFood(item));
     setIsFavorite(!isFavorite);
+    navigation.navigate('FavoritePage');
   };
 
   const ingredientsIndexes = (meal: Item) => {
@@ -215,6 +216,7 @@ const RecipeDetail = ({navigation, route}: recipeProps) => {
             color={isFavorite ? 'red' : 'gray'}
             // while pressing favorite icon, that favorite food should add to FavoritePage
             onPress={handleAddToFavorite}
+            
           />
         </TouchableOpacity>
 
@@ -225,7 +227,7 @@ const RecipeDetail = ({navigation, route}: recipeProps) => {
           color={'#fff'}
           onClick={() => {
             dispatch(addItemToCart({...item, qty}));
-            navigation.navigate('CartPage');
+            navigation.navigate('CartPage')
           }}
         />
       </ScrollView>
@@ -256,7 +258,16 @@ const styles = StyleSheet.create({
     color: '#0A734D',
     fontWeight: '600',
   },
-
+ 
+  favoriteIcon: {
+    top: 280,
+    right: 20,
+    position: 'absolute',
+    backgroundColor: '#ffffff',
+    borderRadius: 100,
+    padding: 2,
+  },
+  
   nutritionContainer: {
     borderWidth: 1,
     marginHorizontal: 10,
