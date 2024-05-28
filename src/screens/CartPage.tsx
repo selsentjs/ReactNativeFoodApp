@@ -1,7 +1,6 @@
 import {
   FlatList,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -29,6 +28,21 @@ interface CartItem {
 const CartPage = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
+  // Dispatching add item action
+  const handleAddItem = item => {
+    dispatch(addItemToCart(item));
+  };
+
+  // Dispatching reduce item action
+  const handleReduceItem = item => {
+    dispatch(reduceItemFromCart(item));
+  };
+
+  // Dispatching remove item action
+  const handleRemoveItem = item => {
+    dispatch(removeItemFromCart(item));
+  };
 
   const cart: CartItem[] = useSelector(
     (state: {cart: {data: CartItem[]}}) => state.cart.data,
@@ -84,9 +98,9 @@ const CartPage = () => {
                         style={styles.btn}
                         onPress={() => {
                           if (item.qty > 1) {
-                            dispatch(reduceItemFromCart(item)); // If quantity is more than 1, reduce it
+                            handleReduceItem(item);
                           } else {
-                            dispatch(removeItemFromCart(item)); // If quantity is 1, remove it from the cart
+                            handleRemoveItem(item);
                           }
                         }}>
                         <Text style={styles.operator}>-</Text>
@@ -94,7 +108,7 @@ const CartPage = () => {
                       <Text style={styles.qtyText}>{item.qty}</Text>
                       <TouchableOpacity
                         style={styles.btn}
-                        onPress={() => dispatch(addItemToCart(item))}>
+                        onPress={() => handleAddItem(item)}>
                         <Text style={styles.operator}>+</Text>
                       </TouchableOpacity>
                     </View>
@@ -108,11 +122,12 @@ const CartPage = () => {
           }}
         />
       </View>
-      {/* checkout details */}
-      {cart.length > 0 && (
-        <CheckoutLayout items={cart.length} total={getTotal()} />
-      )}
-
+      <View style={{marginTop: 70}}>
+        {/* checkout details */}
+        {cart.length > 0 && (
+          <CheckoutLayout items={cart.length} total={getTotal()} />
+        )}
+      </View>
       {cart.length === 0 && (
         <View style={styles.noItems}>
           <Text style={{color: 'green', fontSize: 22}}>No Items in cart</Text>
@@ -129,7 +144,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: '#ffffff',
     width: 400,
-    height: 180,
+    height: 130,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -142,8 +157,8 @@ const styles = StyleSheet.create({
   },
   image: {
     marginVertical: 10,
-    width: 170,
-    height: 150,
+    width: 100,
+    height: 100,
     borderRadius: 10,
     marginLeft: 20,
   },
@@ -160,7 +175,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     color: 'black',
-    marginTop: 10,
+    marginTop: 5,
   },
   noData: {
     color: 'red',
@@ -172,7 +187,7 @@ const styles = StyleSheet.create({
   qtyView: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 15,
+    marginTop: 10,
   },
   btn: {
     padding: 5,
@@ -186,7 +201,6 @@ const styles = StyleSheet.create({
   noItems: {
     width: '100%',
     height: '100%',
-    justifyContent: 'center',
     alignItems: 'center',
   },
   singleItemTotal: {

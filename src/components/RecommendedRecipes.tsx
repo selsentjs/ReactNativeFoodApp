@@ -6,9 +6,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const RecommendedRecipes = ({toggleGridView, toggleEllipsisView, toggleSquareView}) => {
   return (
     <View style={styles.recipesContainer}>
-      <Text style={styles.text}>RecommendedRecipes</Text>
+      <Text style={styles.text}>Recommended Recipes</Text>
       <TouchableOpacity onPress={toggleEllipsisView}>
-        <FontAwesome name="ellipsis-v" size={30} />
+        <FontAwesome name="ellipsis-v" size={28} />
       </TouchableOpacity>
       <TouchableOpacity onPress={toggleGridView}>
         <Ionicons name="grid" size={24} />
@@ -33,5 +33,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     marginVertical: 15,
+    color: 'black',
   },
 });

@@ -12,6 +12,11 @@ import Checkout from '../screens/Checkout';
 import {useSelector} from 'react-redux';
 import Addresses from '../screens/Addresses';
 import AddAddress from '../screens/AddAddress';
+import User from '../screens/User';
+import OrderSuccess from '../screens/OrderSuccess';
+import Splash from '../screens/Splash';
+import Register from '../screens/Register';
+import Login from '../screens/Login';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -94,13 +99,45 @@ const BottomTabNavigation = () => {
           tabBarBadge: cartLength > 0 ? cartLength : undefined,
         }}
       />
+
+      <Tab.Screen
+        name="User"
+        component={User}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({color, focused}) => (
+            <Ionicons
+              name={focused ? 'person' : 'person-outline'}
+              size={28}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
 
 const StackNavigate = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="Splash">
+      <Stack.Screen
+        name="Splash"
+        component={Splash}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{headerShown: false}}
+      />
+
       <Stack.Screen
         name="BottomTabs"
         component={BottomTabNavigation}
@@ -108,6 +145,7 @@ const StackNavigate = () => {
           headerShown: false,
         }}
       />
+
       <Stack.Screen
         name="RecipeDetail"
         component={RecipeDetail}
@@ -132,6 +170,13 @@ const StackNavigate = () => {
       <Stack.Screen
         name="AddAddress"
         component={AddAddress}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="OrderSuccess"
+        component={OrderSuccess}
         options={{
           headerShown: false,
         }}

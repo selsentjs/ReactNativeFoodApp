@@ -104,6 +104,17 @@ const RecipeDetail = ({navigation, route}: recipeProps) => {
           </View>
         </View>
 
+        {/* Add To Cart button */}
+        <Button
+          bg={'#734F0A'}
+          title={'Add To Cart'}
+          color={'#fff'}
+          onClick={() => {
+            dispatch(addItemToCart({...item, qty}));
+            navigation.navigate('CartPage');
+          }}
+        />
+
         {/* nutrition part */}
 
         <View style={styles.nutritionContainer}>
@@ -216,20 +227,8 @@ const RecipeDetail = ({navigation, route}: recipeProps) => {
             color={isFavorite ? 'red' : 'gray'}
             // while pressing favorite icon, that favorite food should add to FavoritePage
             onPress={handleAddToFavorite}
-            
           />
         </TouchableOpacity>
-
-        {/* Add To Cart button */}
-        <Button
-          bg={'#734F0A'}
-          title={'Add To Cart'}
-          color={'#fff'}
-          onClick={() => {
-            dispatch(addItemToCart({...item, qty}));
-            navigation.navigate('CartPage')
-          }}
-        />
       </ScrollView>
     </View>
   );
@@ -258,7 +257,7 @@ const styles = StyleSheet.create({
     color: '#0A734D',
     fontWeight: '600',
   },
- 
+
   favoriteIcon: {
     top: 280,
     right: 20,
@@ -267,7 +266,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     padding: 2,
   },
-  
+
   nutritionContainer: {
     borderWidth: 1,
     marginHorizontal: 10,

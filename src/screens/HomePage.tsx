@@ -8,7 +8,6 @@ import RecommendedRecipes from '../components/RecommendedRecipes';
 import EllipsisView from '../components/EllipsisView';
 import SquareView from '../components/SquareView';
 
-
 const HomePage = () => {
   const [search, setSearch] = useState('');
   // Add a new state to keep track of the selected category
@@ -42,19 +41,19 @@ const HomePage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.heading}>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Ionicons name="menu" size={30} color={'black'} style={styles.icon} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <Text style={{fontSize: 20, fontWeight: '600', color: 'black'}}>
-          Welcome Selva!
-        </Text>
         <Ionicons
           name="person-circle-outline"
-          size={50}
+          size={60}
           color={'black'}
           style={styles.userIcon}
         />
+        <Text style={{fontSize: 20, fontWeight: '600', color: 'black', marginLeft: 10,}}>
+          Welcome Selva!
+        </Text>
       </View>
       <HorizontalImage
         selectedCategory={selectedCategory}
@@ -95,13 +94,14 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   userIcon: {
-    color: 'blue',
+    color: '#674007',
   },
   heading: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    //justifyContent: 'space-evenly',
     marginTop: 15,
     marginHorizontal: 7,
+   
   },
 });

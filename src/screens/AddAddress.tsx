@@ -5,23 +5,37 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import React, {useState} from 'react';
 import Header from '../components/common/Header';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Button from '../components/common/Button';
 import {useDispatch} from 'react-redux';
-import {addAddress} from '../redux/slice/AddressSlice';
+import {addAddress, updateAddress} from '../redux/slice/AddressSlice';
 import uuid from 'react-native-uuid';
 
-const AddAddress = () => {
+const AddAddress = props => {
+  // to get the address id
+  const item = props.route.params;
+
   const navigation = useNavigation();
-  const [type, setType] = useState(0);
-  // input box states
-  const [state, setState] = useState('');
-  const [city, setCity] = useState('');
-  const [street, setStreet] = useState('');
-  const [pinCode, setPincode] = useState('');
+
+  // input box states - when you edit the data, it will get all the existing data
+  const [type, setType] = useState(
+    item.type === 'edit' ? (item.data.type === 'Home' ? 0 : 1) : 0,
+  );
+
+  const [state, setState] = useState(
+    item.type === 'edit' ? item.data.state : '',
+  );
+  const [city, setCity] = useState(item.type === 'edit' ? item.data.city : '');
+  const [street, setStreet] = useState(
+    item.type === 'edit' ? item.data.street : '',
+  );
+  const [pinCode, setPincode] = useState(
+    item.type === 'edit' ? item.data.pinCode : '',
+  );
 
   // dispatch
   const dispatch = useDispatch();
@@ -29,7 +43,7 @@ const AddAddress = () => {
   return (
     <View style={{flex: 1}}>
       <Header
-        title={'Add New Address'}
+        title={item.type === 'edit' ? 'Edit Address' : 'Add New Address'}
         leftIcon={require('../assets/back-arrow.png')}
         rightIcon={require('../assets/shopping-bag.png')}
         onClickLeftIcon={() => {
@@ -97,19 +111,33 @@ const AddAddress = () => {
         bg={'brown'}
         title={'Save Address'}
         color={'#fff'}
+        // edited address should save or new address should save 
         onClick={() => {
-          () => {
+          if (item.type === 'edit') {
+            dispatch(
+              updateAddress({
+                state: state,
+                city: city,
+                street: street,
+                pinCode: pinCode,
+                type: type === 0 ? 'Home' : 'Office',
+                id: item.data.id,
+              }),
+              navigation.goBack(),
+            );
+          } else {
             dispatch(
               addAddress({
                 state: state,
                 city: city,
+                street: street,
                 pinCode: pinCode,
-                type: type === 1 ? 'Home' : 'Office',
+                type: type === 0 ? 'Home' : 'Office',
                 id: uuid.v4(),
               }),
               navigation.goBack(),
             );
-          };
+          }
         }}
       />
     </View>

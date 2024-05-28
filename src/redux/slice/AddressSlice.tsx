@@ -1,9 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 interface Address {
-  id: number;
+  id: string;
   state: string;
   city: string;
+  street: string;
   pinCode: string;
   type: string;
 }
@@ -30,6 +31,7 @@ const AddressSlice = createSlice({
             ...item,
             state: action.payload.state,
             city: action.payload.city,
+            street: action.payload.street,
             pinCode: action.payload.pinCode,
             type: action.payload.type,
           };

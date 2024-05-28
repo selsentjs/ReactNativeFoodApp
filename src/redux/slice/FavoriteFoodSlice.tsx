@@ -22,9 +22,13 @@ const FavoriteFoodSlice = createSlice({
         state.data.push(newItem);
       } 
     },
+    removeFavoriteFood(state, action) {
+      const itemId = action.payload;
+      state.data = state.data.filter(item => item._id !== itemId);
+    },
   },
 });
 
-export const {addFavoriteFood} = FavoriteFoodSlice.actions;
+export const {addFavoriteFood, removeFavoriteFood} = FavoriteFoodSlice.actions;
 
 export default FavoriteFoodSlice.reducer;

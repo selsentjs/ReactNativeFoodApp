@@ -18,7 +18,9 @@ const CheckoutLayout = ({total, items}: checkoutProps) => {
   return (
     <View style={styles.checkoutContainer}>
       <View style={styles.tab}>
-        <Text style={styles.items}>{`(Total Items: ${items})`}</Text>
+        <Text style={styles.items}>{`(Total Item${
+          items === 1 ? '' : 's'
+        }: ${items})`}</Text>
         <Text style={styles.total}>{'Grand Total :  ₹ ' + total}</Text>
       </View>
       <View style={styles.tab}>
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
   checkoutBtn: {
     width: '80%',
     height: '60%',
-    backgroundColor: 'orange',
+    backgroundColor: 'brown',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
