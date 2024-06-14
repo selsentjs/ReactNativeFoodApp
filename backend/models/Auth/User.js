@@ -37,7 +37,6 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
     },
     profilePic: {type: String},
-    followers: {type: Number},
   },
   {timestamps: true},
 );

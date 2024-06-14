@@ -14,9 +14,9 @@ const OrderSuccess = () => {
       <Text
         style={styles.btn}
         onPress={() => {
-          navigation.navigate('HomePage');
+          navigation.navigate('OrderPage');
         }}>
-        Go To Home
+        Go To Order page
       </Text>
     </View>
   );

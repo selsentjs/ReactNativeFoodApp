@@ -7,6 +7,7 @@ import Search from '../components/common/Search';
 import RecommendedRecipes from '../components/RecommendedRecipes';
 import EllipsisView from '../components/EllipsisView';
 import SquareView from '../components/SquareView';
+import {useSelector} from 'react-redux';
 
 const HomePage = () => {
   const [search, setSearch] = useState('');
@@ -16,6 +17,11 @@ const HomePage = () => {
   const [showGridView, setShowGridView] = useState(true);
   const [showSquareView, setShowSquareView] = useState(false);
   const [showEllipsisView, setShowEllipsisView] = useState(false);
+
+  // Get the user's name from the Redux store
+  const userName = useSelector(state => state.auth.data?.name);
+
+  console.log('username:', userName);
 
   // Function to toggle grid view
   const toggleGridView = () => {
@@ -51,8 +57,8 @@ const HomePage = () => {
           color={'black'}
           style={styles.userIcon}
         />
-        <Text style={{fontSize: 20, fontWeight: '600', color: 'black', marginLeft: 10,}}>
-          Welcome Selva!
+        <Text style={styles.welcomeText}>
+          {`Welcome ${userName || 'Guest'}!`}
         </Text>
       </View>
       <HorizontalImage
@@ -102,6 +108,11 @@ const styles = StyleSheet.create({
     //justifyContent: 'space-evenly',
     marginTop: 15,
     marginHorizontal: 7,
-   
+  },
+  welcomeText: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: 'black',
+    marginLeft: 10,
   },
 });

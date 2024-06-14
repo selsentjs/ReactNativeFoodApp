@@ -5,14 +5,15 @@ import HorizontalReducer from '../slice/HorizontalFoodSlice';
 import GridReducer from '../slice/GridFoodSlice';
 import FavoriteFoodReducer from '../slice/FavoriteFoodSlice';
 import CartReducer from '../slice/CartSlice';
+import AuthReducer from '../slice/AuthSlice';
 import AddressReducer from '../slice/AddressSlice';
 import OrderReducer from '../slice/OrderSlice';
 import {combineReducers} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 // Define your custom middleware
-const myMiddleware = storeAPI => next => action => {
-  // console.log('Action:', action);
+const myMiddleware = storeAPI => next => action => { 
   return next(action);
 };
 
@@ -24,11 +25,13 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   HorizontalFood: HorizontalReducer,
+  auth: AuthReducer,
   GridFood: GridReducer,
   FavoriteFood: FavoriteFoodReducer,
   cart: CartReducer,
   address: AddressReducer,
   order: OrderReducer,
+  
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -2,6 +2,8 @@ const User = require('../models/Auth/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+// =============================================================
+// register
 const register = async (req, res) => {
   const {name, email, mobile, password, role} = req.body;
   try {
@@ -115,9 +117,14 @@ const logout = async (req, res) => {
   });
   res.status(200).json({msg: 'user logout successfully'});
 };
+
+//====================================================================
+
+
 module.exports = {
   register,
   checkEmail,
   login,
   logout,
+  
 };

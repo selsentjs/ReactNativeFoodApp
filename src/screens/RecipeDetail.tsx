@@ -75,7 +75,7 @@ const RecipeDetail = ({navigation, route}: recipeProps) => {
 
   return (
     <View>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <Header
           leftIcon={require('../assets/back-arrow.png')}
           rightIcon={require('../assets/shopping-bag.png')}

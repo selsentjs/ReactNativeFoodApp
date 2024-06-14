@@ -146,7 +146,7 @@ const Checkout = () => {
 
   return (
     <View>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <Header
           title={'Checkout'}
           leftIcon={require('../assets/back-arrow.png')}

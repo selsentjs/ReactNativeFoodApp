@@ -17,6 +17,7 @@ import OrderSuccess from '../screens/OrderSuccess';
 import Splash from '../screens/Splash';
 import Register from '../screens/Register';
 import Login from '../screens/Login';
+import EditProfile from '../screens/EditProfile';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -177,6 +178,13 @@ const StackNavigate = () => {
       <Stack.Screen
         name="OrderSuccess"
         component={OrderSuccess}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
         options={{
           headerShown: false,
         }}
